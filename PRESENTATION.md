@@ -12,7 +12,7 @@ Le dépôt contient le code de l'API, son Dockerfile et les manifests Kustomize.
 
 ## Exécution initiale vérifiée
 
-Le dépôt a été publié, le cluster `kind-gitops-tp` créé et Argo CD installé. L'Application `fastapi-demo` a automatiquement déployé l'API depuis Git. Vérification initiale : **Synced / Healthy**, Deployment **1/1** et pod **Running 1/1**. Les quatre manipulations ci-dessous sont préparées pour la démonstration en direct ; elles n'ont pas encore été jouées, afin de conserver l'état de départ.
+Le dépôt a été publié, le cluster `kind-gitops-tp` créé et Argo CD installé. L'Application `fastapi-demo` a automatiquement déployé l'API depuis Git. Vérification initiale : **Synced / Healthy**, Deployment **1/1** et pod **Running 1/1**. Les commandes et leurs sorties observées sont consignées dans [`commands/04-outputs.txt`](commands/04-outputs.txt). Les quatre manipulations ci-dessous sont préparées pour la démonstration en direct ; elles n'ont pas encore été jouées, afin de conserver l'état de départ.
 
 ## Architecture
 
