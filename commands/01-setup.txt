@@ -11,10 +11,7 @@ kind create cluster --name gitops-tp
 kind load docker-image gitops-fastapi:1.0.0 --name gitops-tp
 kubectl config use-context kind-gitops-tp
 
-# Publier le dépôt public lu par Argo CD.
-git init -b main
-git add .
-git commit -m "Initial GitOps FastAPI lab"
+# Le dépôt local et son premier commit sont déjà créés. Le publier pour Argo CD.
 gh repo create Ala-ADN/tp1-gitops-argocd --public --source=. --remote=origin --push
 
 # Installer Argo CD dans le cluster. L'Application est créée après la publication Git.
