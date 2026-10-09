@@ -4,6 +4,7 @@ metadata:
   name: fastapi-demo
 spec:
   replicas: 1
+  progressDeadlineSeconds: 60
   selector:
     matchLabels:
       app: fastapi-demo
