@@ -1,0 +1,2 @@
+# Facultatif, après la présentation. Supprime le cluster local et ses ressources.
+kind delete cluster --name gitops-tp

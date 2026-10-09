@@ -1,0 +1,37 @@
+# Exécuter depuis gitops-lab. Garder l'UI Argo CD ouverte sur fastapi-demo.
+# Vérifier que le contexte est le cluster du TP.
+kubectl config current-context
+
+# 1. Déploiement continu : changer le nombre de répliques dans Git.
+sed -i 's/count: 1/count: 2/' k8s/overlays/demo/kustomization.yaml
+git add k8s/overlays/demo/kustomization.yaml
+git commit -m "Scale FastAPI to two replicas"
+git push
+kubectl -n gitops-demo get deployment fastapi-demo -w
+# Montrer 2/2 et Synced + Healthy dans l'UI. Ctrl+C arrête seulement le suivi.
+
+# 2. Drift : supprimer le Deployment depuis le cluster.
+kubectl -n gitops-demo delete deployment fastapi-demo
+kubectl -n gitops-demo get deployment fastapi-demo -w
+# Montrer OutOfSync transitoire puis recréation, Synced + Healthy. Ctrl+C pour quitter.
+
+# 3. Erreur : utiliser une image située dans un registre inexistant.
+sed -i 's|newName: gitops-fastapi|newName: registry.invalid/gitops-fastapi|' k8s/overlays/demo/kustomization.yaml
+git add k8s/overlays/demo/kustomization.yaml
+git commit -m "Demonstrate image pull failure"
+git push
+kubectl -n gitops-demo get pods -w
+# Attendre l'échec de tirage d'image. Dans l'UI : Synced, puis Progressing/Degraded.
+# Le message du pod peut être ErrImagePull ou ImagePullBackOff.
+kubectl -n gitops-demo describe pods -l app=fastapi-demo
+
+# 4. Rollback dans l'UI : ouvrir History and Rollback.
+# Désactiver temporairement Auto-Sync dans les détails de l'Application.
+# Cliquer Rollback sur la révision stable "Scale FastAPI to two replicas".
+# Vérifier que le service retrouve 2 pods sains. Il peut rester OutOfSync avec Git.
+# Rétablir ensuite la source de vérité Git :
+git revert --no-edit HEAD
+git push
+# Réactiver Auto-Sync dans l'UI, puis vérifier Synced + Healthy.
+kubectl -n gitops-demo rollout status deployment/fastapi-demo --timeout=300s
+kubectl -n gitops-demo get deployment,pods,service

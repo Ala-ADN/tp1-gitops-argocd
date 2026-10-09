@@ -1,0 +1,35 @@
+# Exécuter depuis le répertoire gitops-lab, dans un terminal avec accès à Docker et à GitHub.
+# Si Docker refuse l'accès, se déconnecter puis se reconnecter après l'ajout au groupe docker.
+docker info
+gh auth status
+kubectl version --client
+kind version
+
+# Construire l'image FastAPI locale et la charger dans le nœud kind.
+docker build -t gitops-fastapi:1.0.0 ./app
+kind create cluster --name gitops-tp
+kind load docker-image gitops-fastapi:1.0.0 --name gitops-tp
+kubectl config use-context kind-gitops-tp
+
+# Publier le dépôt public lu par Argo CD.
+git init -b main
+git add .
+git commit -m "Initial GitOps FastAPI lab"
+gh repo create Ala-ADN/tp1-gitops-argocd --public --source=. --remote=origin --push
+
+# Installer Argo CD dans le cluster. L'Application est créée après la publication Git.
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n argocd rollout status deployment/argocd-server --timeout=300s
+kubectl -n argocd rollout status deployment/argocd-repo-server --timeout=300s
+kubectl apply -f argocd/application.yaml
+kubectl -n gitops-demo rollout status deployment/fastapi-demo --timeout=300s
+
+# Identifiants UI : utilisateur admin, mot de passe affiché par cette commande.
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+
+# Garder cette commande ouverte dans un terminal séparé, puis ouvrir https://localhost:8080.
+kubectl -n argocd port-forward svc/argocd-server 8080:443
+
+# Facultatif : garder aussi cette commande ouverte dans un autre terminal pour tester l'API.
+kubectl -n gitops-demo port-forward svc/fastapi-demo 8000:80
