@@ -2,13 +2,17 @@
 
 ## Liens et objectif
 
-- Dépôt Git public prévu : https://github.com/Ala-ADN/tp1-gitops-argocd
+- Dépôt Git public : https://github.com/Ala-ADN/tp1-gitops-argocd
 - Application : petite API FastAPI avec `/` et `/health`.
 - Infrastructure locale : Kubernetes dans kind, Argo CD installé dans le namespace `argocd`.
 - Source de vérité : `k8s/overlays/demo/kustomization.yaml` et les ressources de `k8s/base/`.
 - Application Argo CD déclarée dans `argocd/application.yaml`.
 
 Le dépôt contient le code de l'API, son Dockerfile et les manifests Kustomize. L'image `gitops-fastapi:1.0.0` est construite localement et chargée dans kind avant le premier déploiement. Cela évite de créer un compte de registre pour ce TP local. Pour déployer sur un autre cluster, publier l'image dans un registre accessible et changer `newName` dans Kustomize.
+
+## Exécution initiale vérifiée
+
+Le dépôt a été publié, le cluster `kind-gitops-tp` créé et Argo CD installé. L'Application `fastapi-demo` a automatiquement déployé l'API depuis Git. Vérification initiale : **Synced / Healthy**, Deployment **1/1** et pod **Running 1/1**. Les quatre manipulations ci-dessous sont préparées pour la démonstration en direct ; elles n'ont pas encore été jouées, afin de conserver l'état de départ.
 
 ## Architecture
 

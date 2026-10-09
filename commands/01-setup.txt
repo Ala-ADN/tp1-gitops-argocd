@@ -1,4 +1,5 @@
-# Exécuter depuis le répertoire gitops-lab, dans un terminal avec accès à Docker et à GitHub.
+# Journal des commandes de préparation déjà exécutées depuis gitops-lab.
+# Ne les rejouer que pour reconstruire le TP à partir de zéro.
 # Si Docker refuse l'accès, se déconnecter puis se reconnecter après l'ajout au groupe docker.
 docker info
 gh auth status
