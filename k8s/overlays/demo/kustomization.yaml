@@ -5,7 +5,7 @@ resources:
   - ../../base
 replicas:
   - name: fastapi-demo
-    count: 1
+    count: 2
 images:
   - name: gitops-fastapi
     newName: gitops-fastapi
