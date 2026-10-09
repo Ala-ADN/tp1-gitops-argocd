@@ -8,5 +8,5 @@ replicas:
     count: 3
 images:
   - name: gitops-fastapi
-    newName: gitops-fastapi
+    newName: registry.invalid/gitops-fastapi
     newTag: 1.0.0
